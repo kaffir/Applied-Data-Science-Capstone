@@ -45,7 +45,7 @@ app.layout = html.Div(children=[html.H1('SpaceX Launch Records Dashboard',
                                 #dcc.RangeSlider(id='payload-slider',...)
                                 dcc.RangeSlider(id='payload-slider',
                                     min=0, max=10000, step=1000,
-                                    marks={0: '0',
+                                    marks={0: '0', 2500: '2500', 5000: '5000', 7500: '7500',
                                         1000: '1000'},
                                     value=[min_payload, max_payload]),
                                 # TASK 4: Add a scatter chart to show the correlation between payload and launch success
@@ -80,15 +80,20 @@ def get_pie_chart(entered_site):
 def get_scatter_chart(entered_site, entered_payload):
     filtered_df = spacex_df
     if entered_site == 'ALL':
-        fig = px.scatter(filtered_df, x='Payload Mass (kg)', y='class', color='Booster Version Category')
+        print(entered_payload[0])
+        print(entered_payload[1])
+        print(type(entered_payload))
+        data = filtered_df.loc[(filtered_df['Payload Mass (kg)'] >= entered_payload[0]) & (filtered_df['Payload Mass (kg)'] <= entered_payload[1])]
+        fig = px.scatter(data, x='Payload Mass (kg)', y='class', color='Booster Version Category')
         return fig
     else:
         # return the outcomes piechart for a selected site
         # .groupby(["class"])['class'].count().reset_index(name="count")
-        print(entered_payload)
+        print(entered_payload[0])
+        print(entered_payload[1])
         print(type(entered_payload))
         data = filtered_df.loc[(filtered_df['Launch Site'] == entered_site) & (filtered_df['Payload Mass (kg)'] >= entered_payload[0]) & (filtered_df['Payload Mass (kg)'] <= entered_payload[1])]
-        fig = px.scatter(filtered_df, x='Payload Mass (kg)', y='class', color='Booster Version Category')
+        fig = px.scatter(data, x='Payload Mass (kg)', y='class', color='Booster Version Category')
         return fig
 
 
